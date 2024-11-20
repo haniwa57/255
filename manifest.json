@@ -1,6 +1,6 @@
 {
-  "name": "Countdown Timer",
-  "short_name": "CountDown",
+  "name": "学習用Countdown Timer",
+  "short_name": "Countdown",
   "icons": [
     {
       "src": "icon-192.png",

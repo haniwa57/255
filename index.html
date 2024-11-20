@@ -34,9 +34,20 @@
   }
   #countdown {
     color: white;
-    font-size: 6em;
+    font-size: 6em; /* スマートフォン向けのデフォルト文字サイズ */
     font-family: 'Roboto', sans-serif;
     margin: 20px;
+  }
+
+  /* タブレット用の文字サイズ調整 */
+  @media screen and (min-width: 768px) and (max-width: 1024px) {
+    #countdown {
+      font-size: 10em; /* タブレット用の文字サイズ */
+    }
+    button {
+      font-size: 2.5em; /* ボタンの文字サイズも調整 */
+      padding: 25px 50px; /* ボタンの大きさを調整 */
+    }
   }
 </style>
 </head>
@@ -95,6 +106,7 @@
     runTimer(0);
     document.getElementById('startBtn').style.display = 'none';
   }
+
   // Service Worker登録
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/service-worker.js').then(function (registration) {

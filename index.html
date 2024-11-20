@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>学習用Countdown Timer</title>
+<title>Countdown Timer</title>
 <link rel="manifest" href="manifest.json">
 <style>
   body {
@@ -45,7 +45,6 @@
 <div class="timer">
   <h1 id="countdown">90:00</h1>
   <button id="startBtn" onclick="startCountdown()">Start</button>
-  <button id="fullscreenBtn" onclick="enterFullscreen()">Fullscreen</button>
 </div>
 
 <script>
@@ -96,21 +95,6 @@
     runTimer(0);
     document.getElementById('startBtn').style.display = 'none';
   }
-
-  function enterFullscreen() {
-    var docElm = document.documentElement;
-    if (docElm.requestFullscreen) {
-      docElm.requestFullscreen();
-    } else if (docElm.mozRequestFullScreen) {
-      docElm.mozRequestFullScreen();
-    } else if (docElm.webkitRequestFullScreen) {
-      docElm.webkitRequestFullScreen();
-    } else if (docElm.msRequestFullscreen) {
-      docElm.msRequestFullscreen();
-    }
-    document.getElementById('fullscreenBtn').style.display = 'none';
-  }
-
   // Service Worker登録
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/service-worker.js').then(function (registration) {

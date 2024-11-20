@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>学習用Countdown Timer</title>
+<link rel="manifest" href="manifest.json">
+<style>
+  body {
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: black;
+    transition: background-color 1s ease;
+    user-select: none;
+  }
+  .timer {
+    text-align: center;
+  }
+  button {
+    margin-top: 20px;
+    padding: 15px 30px;
+    font-size: 1.5em;
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    outline: none;
+  }
+  #countdown {
+    color: white;
+    font-size: 6em;
+    font-family: 'Roboto', sans-serif;
+    margin: 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="timer">
+  <h1 id="countdown">90:00</h1>
+  <button id="startBtn" onclick="startCountdown()">Start</button>
+  <button id="fullscreenBtn" onclick="enterFullscreen()">Fullscreen</button>
+</div>
+
+<script>
+  function startTimer(duration, display) {
+    var timer = duration, minutes, seconds;
+    var interval = setInterval(function () {
+      minutes = parseInt(timer / 60, 10);
+      seconds = parseInt(timer % 60, 10);
+
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      seconds = seconds < 10 ? "0" + seconds : seconds;
+
+      display.textContent = minutes + ":" + seconds;
+
+      if (--timer < 0) {
+        clearInterval(interval);
+        timer = 0;
+        document.body.style.backgroundColor = "red";
+        display.style.color = "red";
+        setTimeout(function () {
+          document.body.style.backgroundColor = "black";
+          display.style.color = "white";
+        }, 5000);
+      }
+    }, 1000);
+  }
+  
+  function startCountdown() {
+    var sets = 9;
+    var durations = [90 * 60, 30 * 60];
+    var display = document.querySelector('#countdown');
+
+    function runTimer(index) {
+      startTimer(durations[index], display);
+      setTimeout(function () {
+        if (sets > 0) {
+          index = (index + 1) % 2;
+          sets--;
+          runTimer(index);
+        } else {
+          display.textContent = "00:00";
+          document.getElementById('startBtn').style.display = 'block';
+          sets = 9;
+        }
+      }, durations[index] * 1000);
+    }
+
+    runTimer(0);
+    document.getElementById('startBtn').style.display = 'none';
+  }
+
+  function enterFullscreen() {
+    var docElm = document.documentElement;
+    if (docElm.requestFullscreen) {
+      docElm.requestFullscreen();
+    } else if (docElm.mozRequestFullScreen) {
+      docElm.mozRequestFullScreen();
+    } else if (docElm.webkitRequestFullScreen) {
+      docElm.webkitRequestFullScreen();
+    } else if (docElm.msRequestFullscreen) {
+      docElm.msRequestFullscreen();
+    }
+    document.getElementById('fullscreenBtn').style.display = 'none';
+  }
+
+  // Service Worker登録
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js').then(function (registration) {
+      console.log('Service Worker registered with scope:', registration.scope);
+    }).catch(function (error) {
+      console.log('Service Worker registration failed:', error);
+    });
+  }
+</script>
+</body>
+</html>

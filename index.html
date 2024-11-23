@@ -1,122 +1,78 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Countdown Timer</title>
-<link rel="manifest" href="manifest.json">
-<link rel="cowntdownicon" sizes="180x180" href="./icon-512.png">
-<link rel="icon" type="image/x-icon" href="./count.ico">
-<style>
-  body {
-    font-family: 'Roboto', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    background-color: black;
-    transition: background-color 1s ease;
-    user-select: none;
-  }
-  .timer {
-    text-align: center;
-  }
-  button {
-    margin-top: 20px;
-    padding: 15px 30px;
-    font-size: 1.5em;
-    cursor: pointer;
-    background-color: rgba(255, 255, 255, 0.2);
-    border: none;
-    border-radius: 10px;
-    color: white;
-    font-family: 'Roboto', sans-serif;
-    outline: none;
-  }
-  #countdown {
-    color: white;
-    font-size: 6em; /* スマートフォン向けのデフォルト文字サイズ */
-    font-family: 'Roboto', sans-serif;
-    margin: 20px;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #000;
+            color: #fff;
+        }
 
-  /* タブレット用の文字サイズ調整 */
-  @media screen and (min-width: 768px) and (max-width: 1024px) {
-    #countdown {
-      font-size: 10000000em; /* タブレット用の文字サイズ */
-    }
-    button {
-      font-size: 5000em; /* ボタンの文字サイズも調整 */
-      padding: 300px 600px; /* ボタンの大きさを調整 */
-    }
-  }
-</style>
+        .timer {
+            font-size: 4rem;
+            font-weight: bold;
+        }
+
+        input[type="datetime-local"] {
+            padding: 10px;
+            font-size: 1.5rem;
+            color: #000;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
 </head>
 <body>
+    <input type="datetime-local" id="datetime">
+    <div class="timer" id="timer">--:--:--</div>
 
-<div class="timer">
-  <h1 id="countdown">90:00</h1>
-  <button id="startBtn" onclick="startCountdown()">Start</button>
-</div>
+    <script>
+        const timerElement = document.getElementById('timer');
+        const datetimeInput = document.getElementById('datetime');
 
-<script>
-  function startTimer(duration, display) {
-    var timer = duration, minutes, seconds;
-    var interval = setInterval(function () {
-      minutes = parseInt(timer / 60, 10);
-      seconds = parseInt(timer % 60, 10);
+        let countdownInterval;
 
-      minutes = minutes < 10 ? "0" + minutes : minutes;
-      seconds = seconds < 10 ? "0" + seconds : seconds;
+        datetimeInput.addEventListener('change', () => {
+            const targetTime = new Date(datetimeInput.value);
+            const currentTime = new Date();
 
-      display.textContent = minutes + ":" + seconds;
+            if (isNaN(targetTime.getTime()) || targetTime <= currentTime) {
+                alert('Please select a valid future date and time.');
+                return;
+            }
 
-      if (--timer < 0) {
-        clearInterval(interval);
-        timer = 0;
-        document.body.style.backgroundColor = "red";
-        display.style.color = "red";
-        setTimeout(function () {
-          document.body.style.backgroundColor = "black";
-          display.style.color = "white";
-        }, 5000);
-      }
-    }, 1000);
-  }
-  
-  function startCountdown() {
-    var sets = 9;
-    var durations = [90 * 60, 30 * 60];
-    var display = document.querySelector('#countdown');
+            clearInterval(countdownInterval);
 
-    function runTimer(index) {
-      startTimer(durations[index], display);
-      setTimeout(function () {
-        if (sets > 0) {
-          index = (index + 1) % 2;
-          sets--;
-          runTimer(index);
-        } else {
-          display.textContent = "00:00";
-          document.getElementById('startBtn').style.display = 'block';
-          sets = 9;
-        }
-      }, durations[index] * 1000);
-    }
+            countdownInterval = setInterval(() => {
+                const now = new Date();
+                const timeDifference = targetTime - now;
 
-    runTimer(0);
-    document.getElementById('startBtn').style.display = 'none';
-  }
+                if (timeDifference <= 0) {
+                    clearInterval(countdownInterval);
+                    timerElement.textContent = "Time's up!";
+                    return;
+                }
 
-  // Service Worker登録
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/service-worker.js').then(function (registration) {
-      console.log('Service Worker registered with scope:', registration.scope);
-    }).catch(function (error) {
-      console.log('Service Worker registration failed:', error);
-    });
-  }
-</script>
+                const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+                timerElement.textContent = 
+                    `${days > 0 ? days + 'd ' : ''}${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            }, 1000);
+        });
+    </script>
 </body>
 </html>

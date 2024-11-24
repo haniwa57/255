@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Countdown Timer</title>
+<title>学習用Countdown Timer</title>
 <link rel="manifest" href="manifest.json">
 <style>
   body {
@@ -34,20 +34,9 @@
   }
   #countdown {
     color: white;
-    font-size: 6em; /* スマートフォン向けのデフォルト文字サイズ */
+    font-size: 6em;
     font-family: 'Roboto', sans-serif;
     margin: 20px;
-  }
-
-  /* タブレット用の文字サイズ調整 */
-  @media screen and (min-width: 768px) and (max-width: 1024px) {
-    #countdown {
-      font-size: 10em; /* タブレット用の文字サイズ */
-    }
-    button {
-      font-size: 2.5em; /* ボタンの文字サイズも調整 */
-      padding: 25px 50px; /* ボタンの大きさを調整 */
-    }
   }
 </style>
 </head>
@@ -56,6 +45,7 @@
 <div class="timer">
   <h1 id="countdown">90:00</h1>
   <button id="startBtn" onclick="startCountdown()">Start</button>
+  <button id="fullscreenBtn" onclick="enterFullscreen()">Fullscreen</button>
 </div>
 
 <script>
@@ -105,6 +95,20 @@
 
     runTimer(0);
     document.getElementById('startBtn').style.display = 'none';
+  }
+
+  function enterFullscreen() {
+    var docElm = document.documentElement;
+    if (docElm.requestFullscreen) {
+      docElm.requestFullscreen();
+    } else if (docElm.mozRequestFullScreen) {
+      docElm.mozRequestFullScreen();
+    } else if (docElm.webkitRequestFullScreen) {
+      docElm.webkitRequestFullScreen();
+    } else if (docElm.msRequestFullscreen) {
+      docElm.msRequestFullscreen();
+    }
+    document.getElementById('fullscreenBtn').style.display = 'none';
   }
 
   // Service Worker登録

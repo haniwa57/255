@@ -23,8 +23,8 @@
   }
   button {
     margin-top: 20px;
-    padding: 15px 30px;
-    font-size: 1.5em;
+    padding: 2vw 4vw;
+    font-size: 2vw;
     cursor: pointer;
     background-color: rgba(255, 255, 255, 0.2);
     border: none;
@@ -35,7 +35,7 @@
   }
   #countdown {
     color: white;
-    font-size: 6em;
+    font-size: 10vw; /* 画面幅に応じて文字サイズを調整 */
     font-family: 'Roboto', sans-serif;
     margin: 20px;
   }
@@ -75,7 +75,7 @@
   
   function startCountdown() {
     var sets = 9;
-    var durations = [25 * 60, 5 * 60]; // Updated durations
+    var durations = [25 * 60, 5 * 60];
     var display = document.querySelector('#countdown');
 
     function runTimer(index) {

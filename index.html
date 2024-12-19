@@ -23,7 +23,7 @@
   }
   #countdown {
     color: white;
-    font-size: 20vw;
+    font-size: 20vw; /* 画面幅に応じて文字サイズを調整 */
     font-family: 'Roboto', sans-serif;
     margin: 20px;
   }
@@ -38,7 +38,8 @@
 <script>
   let timerRunning = false;
   let interval;
-  let remainingTime = 25 * 60;
+  let remainingTime = 25 * 60; // 初期値: 25分
+  let isLongSession = true; // 25分と5分を切り替えるフラグ
 
   function startTimer(display) {
     interval = setInterval(function () {
@@ -49,14 +50,9 @@
 
       if (--remainingTime < 0) {
         clearInterval(interval);
-        remainingTime = 0;
-        document.body.style.backgroundColor = "red";
-        display.style.color = "red";
-        setTimeout(function () {
-          document.body.style.backgroundColor = "black";
-          display.style.color = "white";
-        }, 5000);
-        timerRunning = false;
+        remainingTime = isLongSession ? 5 * 60 : 25 * 60; // 次のセッションに切り替え
+        isLongSession = !isLongSession; // セッションタイプをトグル
+        startTimer(display); // 次のセッションを自動でスタート
       }
     }, 1000);
   }

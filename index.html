@@ -35,7 +35,7 @@
   }
   #countdown {
     color: white;
-    font-size: 20vw; /* 画面幅に応じて文字サイズを調整 */
+    font-size: 20vw;
     font-family: 'Roboto', sans-serif;
     margin: 20px;
   }
@@ -45,65 +45,52 @@
 
 <div class="timer">
   <h1 id="countdown">25:00</h1>
-  <button id="startBtn" onclick="startCountdown()">Start</button>
+  <button id="controlBtn" onclick="toggleTimer()">Start</button>
 </div>
 
 <script>
-  function startTimer(duration, display) {
-    var timer = duration, minutes, seconds;
-    var interval = setInterval(function () {
-      minutes = parseInt(timer / 60, 10);
-      seconds = parseInt(timer % 60, 10);
+  let timerRunning = false;
+  let interval;
+  let remainingTime = 25 * 60; // 初期値: 25分
 
-      minutes = minutes < 10 ? "0" + minutes : minutes;
-      seconds = seconds < 10 ? "0" + seconds : seconds;
+  function startTimer(display) {
+    interval = setInterval(function () {
+      const minutes = Math.floor(remainingTime / 60);
+      const seconds = remainingTime % 60;
 
-      display.textContent = minutes + ":" + seconds;
+      display.textContent = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 
-      if (--timer < 0) {
+      if (--remainingTime < 0) {
         clearInterval(interval);
-        timer = 0;
+        remainingTime = 0;
         document.body.style.backgroundColor = "red";
         display.style.color = "red";
         setTimeout(function () {
           document.body.style.backgroundColor = "black";
           display.style.color = "white";
         }, 5000);
+        document.getElementById("controlBtn").textContent = "Start";
+        timerRunning = false;
       }
     }, 1000);
   }
-  
-  function startCountdown() {
-    var sets = 9;
-    var durations = [25 * 60, 5 * 60];
-    var display = document.querySelector('#countdown');
 
-    function runTimer(index) {
-      startTimer(durations[index], display);
-      setTimeout(function () {
-        if (sets > 0) {
-          index = (index + 1) % 2;
-          sets--;
-          runTimer(index);
-        } else {
-          display.textContent = "00:00";
-          document.getElementById('startBtn').style.display = 'block';
-          sets = 9;
-        }
-      }, durations[index] * 1000);
-    }
-
-    runTimer(0);
-    document.getElementById('startBtn').style.display = 'none';
+  function stopTimer() {
+    clearInterval(interval);
   }
 
-  // Service Worker登録
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/service-worker.js').then(function (registration) {
-      console.log('Service Worker registered with scope:', registration.scope);
-    }).catch(function (error) {
-      console.log('Service Worker registration failed:', error);
-    });
+  function toggleTimer() {
+    const button = document.getElementById("controlBtn");
+    const display = document.getElementById("countdown");
+
+    if (timerRunning) {
+      stopTimer();
+      button.textContent = "Start";
+    } else {
+      startTimer(display);
+      button.textContent = "Stop";
+    }
+    timerRunning = !timerRunning;
   }
 </script>
 </body>

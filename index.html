@@ -21,18 +21,6 @@
   .timer {
     text-align: center;
   }
-  button {
-    margin-top: 20px;
-    padding: 2vw 4vw;
-    font-size: 2vw;
-    cursor: pointer;
-    background-color: rgba(255, 255, 255, 0.2);
-    border: none;
-    border-radius: 10px;
-    color: white;
-    font-family: 'Roboto', sans-serif;
-    outline: none;
-  }
   #countdown {
     color: white;
     font-size: 20vw;
@@ -45,13 +33,12 @@
 
 <div class="timer">
   <h1 id="countdown">25:00</h1>
-  <button id="controlBtn" onclick="toggleTimer()">Start</button>
 </div>
 
 <script>
   let timerRunning = false;
   let interval;
-  let remainingTime = 25 * 60; // 初期値: 25分
+  let remainingTime = 25 * 60;
 
   function startTimer(display) {
     interval = setInterval(function () {
@@ -69,7 +56,6 @@
           document.body.style.backgroundColor = "black";
           display.style.color = "white";
         }, 5000);
-        document.getElementById("controlBtn").textContent = "Start";
         timerRunning = false;
       }
     }, 1000);
@@ -80,18 +66,18 @@
   }
 
   function toggleTimer() {
-    const button = document.getElementById("controlBtn");
     const display = document.getElementById("countdown");
 
     if (timerRunning) {
       stopTimer();
-      button.textContent = "Start";
     } else {
       startTimer(display);
-      button.textContent = "Stop";
     }
     timerRunning = !timerRunning;
   }
+
+  // 画面全体のクリックイベントを設定
+  document.body.addEventListener("click", toggleTimer);
 </script>
 </body>
 </html>

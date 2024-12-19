@@ -23,7 +23,7 @@
   }
   #countdown {
     color: white;
-    font-size: 20vw; /* 画面幅に応じて文字サイズを調整 */
+    font-size: 10vw; /* 画面幅に応じて文字サイズを調整 */
     font-family: 'Roboto', sans-serif;
     margin: 20px;
   }
@@ -50,9 +50,18 @@
 
       if (--remainingTime < 0) {
         clearInterval(interval);
-        remainingTime = isLongSession ? 5 * 60 : 25 * 60; // 次のセッションに切り替え
-        isLongSession = !isLongSession; // セッションタイプをトグル
-        startTimer(display); // 次のセッションを自動でスタート
+
+        // 背景色を赤に変更
+        document.body.style.backgroundColor = "red";
+        setTimeout(() => {
+          // 3秒後に背景色を黒に戻す
+          document.body.style.backgroundColor = "black";
+
+          // 次のセッションの時間を設定して開始
+          remainingTime = isLongSession ? 5 * 60 : 25 * 60; // 次のセッション時間
+          isLongSession = !isLongSession; // セッションタイプを切り替え
+          startTimer(display); // 次のセッションをスタート
+        }, 3000);
       }
     }, 1000);
   }
